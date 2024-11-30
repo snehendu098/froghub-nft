@@ -1,101 +1,108 @@
-import Image from "next/image";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { HomeEventCard } from "@/components/core";
 
-export default function Home() {
+export default function FrogHubEvents() {
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+    <>
+      {/* Hero Section */}
+      <section className="py-20 text-center">
+        <div className="container mx-auto px-4">
+          <h2 className="mb-6 text-4xl font-bold md:text-6xl bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 bg-clip-text text-transparent">
+            Discover Exciting Events
+            <br />
+            Near You
+          </h2>
+          <p className="mx-auto mb-12 max-w-2xl text-lg text-gray-600 dark:text-zinc-300">
+            Find and join amazing events in your area or host your own.
+            <br />
+            Connect with like-minded individuals and create unforgettable
+            experiences.
+          </p>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+          {/* Search Bar */}
+          <div className="mx-auto mb-8 max-w-2xl relative">
+            <div className="relative">
+              <Input
+                type="search"
+                placeholder="Search for events"
+                className="pl-4 pr-20 bg-white dark:bg-zinc-800 border-gray-300 dark:border-zinc-700 text-gray-900 dark:text-zinc-100 placeholder-gray-400 dark:placeholder-zinc-400 focus:ring-2 focus:ring-emerald-500 transition-all"
+              />
+              <Select>
+                <SelectTrigger className="absolute right-0 top-0 w-[120px] border-0 border-l border-gray-300 dark:border-zinc-700 bg-gray-50 dark:bg-zinc-800 text-gray-700 dark:text-zinc-100 hover:bg-gray-100 dark:hover:bg-zinc-700 transition-colors">
+                  <SelectValue placeholder="All Events" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Events</SelectItem>
+                  <SelectItem value="music">Music</SelectItem>
+                  <SelectItem value="sports">Sports</SelectItem>
+                  <SelectItem value="arts">Arts</SelectItem>
+                  <SelectItem value="food">Food & Drink</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
+          {/* Event Category Tags */}
+          <div className="flex flex-wrap justify-center gap-4 mb-12">
+            {["Concerts", "Tech Conferences", "Sports", "Workshops"].map(
+              (tag) => (
+                <Button
+                  key={tag}
+                  variant="outline"
+                  className="rounded-full bg-white dark:bg-zinc-800 text-gray-700 dark:text-zinc-300 hover:bg-emerald-50 dark:hover:bg-emerald-900 hover:text-emerald-600 dark:hover:text-emerald-400 border-gray-300 dark:border-zinc-700 hover:border-emerald-300 dark:hover:border-emerald-700"
+                >
+                  {tag}
+                </Button>
+              )
+            )}
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+      </section>
+
+      {/* Event Grid Section */}
+      <section className="py-8">
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+            {/* Event Items */}
+            {[
+              {
+                title: "Green Tech Expo 2024",
+                description:
+                  "Explore the latest in sustainable technology and eco-friendly innovations.",
+                date: "May 15, 2024",
+                price: "Free",
+                location: "Eco Center, Green City",
+              },
+              {
+                title: "Frog Conservation Workshop",
+                description:
+                  "Learn about local frog species and how to protect their habitats.",
+                date: "June 5, 2024",
+                price: "$10",
+                location: "Lily Pad Nature Reserve",
+              },
+              {
+                title: "Sustainable Living Fair",
+                description:
+                  "Discover tips and products for a more environmentally friendly lifestyle.",
+                date: "July 20, 2024",
+                price: "$5",
+                location: "Green Park Plaza",
+              },
+            ].map((event, index) => (
+              <HomeEventCard key={index} event={event} />
+            ))}
+          </div>
+        </div>
+      </section>
+    </>
   );
 }
