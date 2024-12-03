@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { Bell } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { ThemeToggle } from "@/components/core/root/theme-toggle";
+import { ThemeToggle } from "./theme-toggle";
 import { ConnectButton, useActiveAccount } from "thirdweb/react";
 import { client } from "@/lib/client-thirdweb";
 import { useTheme } from "next-themes";
@@ -24,7 +24,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       {/* Subtle grid background */}
       <div className="fixed inset-0 z-0">
         <div
-          className="absolute inset-0 bg-[linear-gradient(to_right,#e5e7eb20_1px,transparent_1px),linear-gradient(to_bottom,#e5e7eb20_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#4f4f4f20_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f20_1px,transparent_1px)] bg-[size:24px_24px]"
+          className="absolute inset-0 bg-[linear-gradient(to_right,#ccffd9_1px,transparent_1px),linear-gradient(to_bottom,#ccffe3_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#4f4f4f20_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f20_1px,transparent_1px)] bg-[size:24px_24px]"
           style={{
             maskImage:
               "radial-gradient(ellipse 50% 50% at 50% 50%, #000 70%, transparent 100%)",

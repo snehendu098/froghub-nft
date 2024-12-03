@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button";
 import { HomeEventCard, SearchBar } from "@/components/core";
 import { fetchEvents } from "@/lib/db-operation";
 
@@ -24,21 +23,6 @@ export default async function FrogHubEvents() {
 
           {/* Search Bar */}
           <SearchBar />
-
-          {/* Event Category Tags */}
-          <div className="flex flex-wrap justify-center gap-4 mb-12">
-            {["Concerts", "Tech Conferences", "Sports", "Workshops"].map(
-              (tag) => (
-                <Button
-                  key={tag}
-                  variant="outline"
-                  className="rounded-full bg-white dark:bg-zinc-800 text-gray-700 dark:text-zinc-300 hover:bg-emerald-50 dark:hover:bg-emerald-900 hover:text-emerald-600 dark:hover:text-emerald-400 border-gray-300 dark:border-zinc-700 hover:border-emerald-300 dark:hover:border-emerald-700"
-                >
-                  {tag}
-                </Button>
-              )
-            )}
-          </div>
         </div>
       </section>
 

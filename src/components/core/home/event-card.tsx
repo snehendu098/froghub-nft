@@ -1,5 +1,5 @@
 import { format } from "date-fns";
-import { Calendar, CoinsIcon, DollarSign, MapPin } from "lucide-react";
+import { Calendar, MapPin } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 import { FaEthereum } from "react-icons/fa";

@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { ThemeProvider } from "@/components/core/theme-provider";
+
 import { ThirdwebProvider } from "thirdweb/react";
-import Layout from "@/components/core/root/layout";
 import { Toaster } from "@/components/ui/toaster";
+import { BaseLayout } from "@/components/core";
+import { ThemeProvider } from "@/components/core/theme-provider";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -32,7 +33,7 @@ export default function RootLayout({
           <ThirdwebProvider>
             <Toaster />
 
-            <Layout>{children}</Layout>
+            <BaseLayout>{children}</BaseLayout>
           </ThirdwebProvider>
         </ThemeProvider>
       </body>
