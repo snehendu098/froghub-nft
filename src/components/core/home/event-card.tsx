@@ -8,7 +8,7 @@ const EventCard = ({ event }: any) => {
   return (
     <Link href={`/events/${event._id}`}>
       <div className="cursor-pointer rounded-2xl bg-white dark:bg-zinc-800 p-6 shadow-lg dark:shadow-zinc-800/50 hover:shadow-xl dark:hover:shadow-zinc-700/50 transition-all duration-300 ease-in-out transform hover:-translate-y-1 group">
-        <div className="aspect-[16/9] mb-4 rounded-xl bg-gray-200 dark:bg-zinc-700 overflow-hidden">
+        <div className="aspect-square mb-4 rounded-xl bg-gray-200 dark:bg-zinc-700 overflow-hidden">
           {!event.eventImage && (
             <div className="w-full h-full bg-gradient-to-br from-emerald-400 to-cyan-400 opacity-80 group-hover:opacity-100 transition-opacity duration-300"></div>
           )}

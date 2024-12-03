@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { MoreVertical, MapPin, Users } from "lucide-react";
+import { MoreVertical, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -10,52 +10,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import axios from "axios";
 import { useActiveAccount } from "thirdweb/react";
-
-// Sample data for events
-const events = [
-  {
-    id: 1,
-    date: new Date(2024, 3, 28),
-    startTime: "09:00",
-    endTime: "09:30",
-    title: "30min call meeting Peer <> Leslie",
-    location: "Online",
-    participants: [
-      { name: "Peer", image: "/placeholder.svg?height=32&width=32" },
-      { name: "Leslie", image: "/placeholder.svg?height=32&width=32" },
-    ],
-  },
-  {
-    id: 2,
-    date: new Date(2024, 3, 30),
-    startTime: "15:20",
-    endTime: "16:20",
-    title: "Live Product Demo",
-    location: "WeWork Paris, Floor 3",
-    participants: [
-      { name: "Alex", image: "/placeholder.svg?height=32&width=32" },
-      { name: "Sarah", image: "/placeholder.svg?height=32&width=32" },
-      { name: "Mike", image: "/placeholder.svg?height=32&width=32" },
-      { name: "Emma", image: "/placeholder.svg?height=32&width=32" },
-    ],
-  },
-  {
-    id: 3,
-    date: new Date(2024, 3, 29),
-    startTime: "11:15",
-    endTime: "11:45",
-    title: "30min call meeting Olivia, Liam <> Alban",
-    location: "Online",
-    participants: [
-      { name: "Olivia", image: "/placeholder.svg?height=32&width=32" },
-      { name: "Liam", image: "/placeholder.svg?height=32&width=32" },
-      { name: "Alban", image: "/placeholder.svg?height=32&width=32" },
-    ],
-  },
-];
 
 export default function YourEventsPage() {
   const [activeTab, setActiveTab] = useState("upcoming");

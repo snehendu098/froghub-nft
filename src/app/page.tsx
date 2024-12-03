@@ -1,13 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { HomeEventCard } from "@/components/core";
+import { HomeEventCard, SearchBar } from "@/components/core";
 import { fetchEvents } from "@/lib/db-operation";
 
 export default async function FrogHubEvents() {
@@ -31,27 +23,7 @@ export default async function FrogHubEvents() {
           </p>
 
           {/* Search Bar */}
-          <div className="mx-auto mb-8 max-w-2xl relative">
-            <div className="relative">
-              <Input
-                type="search"
-                placeholder="Search for events"
-                className="pl-4 pr-20 bg-white dark:bg-zinc-800 border-gray-300 dark:border-zinc-700 text-gray-900 dark:text-zinc-100 placeholder-gray-400 dark:placeholder-zinc-400 focus:ring-2 focus:ring-emerald-500 transition-all"
-              />
-              <Select>
-                <SelectTrigger className="absolute right-0 top-0 w-[120px] border-0 border-l border-gray-300 dark:border-zinc-700 bg-gray-50 dark:bg-zinc-800 text-gray-700 dark:text-zinc-100 hover:bg-gray-100 dark:hover:bg-zinc-700 transition-colors">
-                  <SelectValue placeholder="All Events" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Events</SelectItem>
-                  <SelectItem value="music">Music</SelectItem>
-                  <SelectItem value="sports">Sports</SelectItem>
-                  <SelectItem value="arts">Arts</SelectItem>
-                  <SelectItem value="food">Food & Drink</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
+          <SearchBar />
 
           {/* Event Category Tags */}
           <div className="flex flex-wrap justify-center gap-4 mb-12">
