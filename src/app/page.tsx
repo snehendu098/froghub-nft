@@ -1,6 +1,8 @@
 import { HomeEventCard, SearchBar } from "@/components/core";
 import { fetchEvents } from "@/lib/db-operation";
 
+export const dynamic = "force-dynamic";
+
 export default async function FrogHubEvents() {
   const events = await fetchEvents();
 
