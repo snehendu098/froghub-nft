@@ -43,14 +43,21 @@ const eventSchema = new Schema<IEvent>(
       type: String,
       required: [true, "Description is required"],
       trim: true,
-      maxLength: [1000, "Description cannot be more than 1000 characters"],
     },
     availableTickets: {
       type: Number,
-      default: 100,
+      default: 0,
     },
     owner: {
       type: String,
+      required: true,
+    },
+    transactionHash: {
+      type: String,
+      required: true,
+    },
+    date: {
+      type: Date,
       required: true,
     },
   },

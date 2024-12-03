@@ -4,6 +4,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/core/theme-provider";
 import { ThirdwebProvider } from "thirdweb/react";
 import Layout from "@/components/core/root/layout";
+import { Toaster } from "@/components/ui/toaster";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -29,6 +30,8 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <ThirdwebProvider>
+            <Toaster />
+
             <Layout>{children}</Layout>
           </ThirdwebProvider>
         </ThemeProvider>

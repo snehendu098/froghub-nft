@@ -8,8 +8,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { HomeEventCard } from "@/components/core";
+import { fetchEvents } from "@/lib/db-operation";
 
-export default function FrogHubEvents() {
+export default async function FrogHubEvents() {
+  const events = await fetchEvents();
+
   return (
     <>
       {/* Hero Section */}
@@ -72,33 +75,8 @@ export default function FrogHubEvents() {
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
             {/* Event Items */}
-            {[
-              {
-                title: "Green Tech Expo 2024",
-                description:
-                  "Explore the latest in sustainable technology and eco-friendly innovations.",
-                date: "May 15, 2024",
-                price: "Free",
-                location: "Eco Center, Green City",
-              },
-              {
-                title: "Frog Conservation Workshop",
-                description:
-                  "Learn about local frog species and how to protect their habitats.",
-                date: "June 5, 2024",
-                price: "$10",
-                location: "Lily Pad Nature Reserve",
-              },
-              {
-                title: "Sustainable Living Fair",
-                description:
-                  "Discover tips and products for a more environmentally friendly lifestyle.",
-                date: "July 20, 2024",
-                price: "$5",
-                location: "Green Park Plaza",
-              },
-            ].map((event, index) => (
-              <HomeEventCard key={index} event={event} />
+            {events.map((event, index) => (
+              <HomeEventCard event={event} key={index} />
             ))}
           </div>
         </div>

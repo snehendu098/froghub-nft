@@ -18,6 +18,30 @@ import { UploadDropzone } from "@/utils/uploadthing";
 import Image from "next/image";
 import { useActiveAccount, useConnect } from "thirdweb/react";
 import { useRouter } from "next/navigation";
+import { toast } from "@/hooks/use-toast";
+import axios from "axios";
+import mongoose from "mongoose";
+import { prepareContractCall, sendTransaction, toWei } from "thirdweb";
+import { contract } from "@/lib/client-thirdweb";
+import Link from "next/link";
+import { ToastAction } from "@/components/ui/toast";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
+import { CalendarIcon } from "lucide-react";
+import { format } from "date-fns";
+import { Calendar } from "@/components/ui/calendar";
+
+type Config = {
+  title: string;
+  website: string;
+  ticketPrice: number;
+  tickets: number;
+  venue: string;
+};
 
 export default function HostEventPage() {
   const [description, setDescription] = useState("");
@@ -26,8 +50,101 @@ export default function HostEventPage() {
   const activeAccount = useActiveAccount();
   const router = useRouter();
   const { isConnecting } = useConnect();
+  const [config, setConfig] = useState<Config>({
+    title: "",
+    website: "",
+    ticketPrice: 0,
+    tickets: 0,
+    venue: "",
+  });
+  const [loading, setLoading] = useState<boolean>(false);
+  const [date, setDate] = useState<Date>();
 
-  const createEvent = async () => {};
+  const createEvent = async () => {
+    try {
+      setLoading(true);
+      if (
+        !config?.title ||
+        !description ||
+        !config?.venue ||
+        !activeAccount?.address ||
+        !config?.ticketPrice ||
+        !config?.tickets ||
+        !date
+      ) {
+        toast({
+          title: "Title, description, ticket number, ticket price is mandatory",
+        });
+      } else {
+        const event_id = new mongoose.Types.ObjectId();
+
+        const transaction = await prepareContractCall({
+          contract,
+          method:
+            "function createEvent(string eventId, uint256 totalTickets, uint256 ticketPrice)",
+          params: [
+            event_id.toString(),
+            BigInt(config?.tickets),
+            toWei(config?.ticketPrice.toString()),
+          ],
+        });
+
+        const { transactionHash } = await sendTransaction({
+          transaction,
+          account: activeAccount,
+        });
+
+        if (transactionHash) {
+          const { data } = await axios.post("/api/events/host", {
+            title: config.title,
+            _id: event_id,
+            website: config?.website,
+            eventImage: imageUrl,
+            ticketPrice: config?.ticketPrice,
+            totalTickets: config?.tickets,
+            venue: config?.venue,
+            description: description,
+            owner: activeAccount?.address,
+            transactionHash,
+            date,
+          });
+          if (!data?.success) {
+            toast({
+              variant: "destructive",
+              title: "Error Occurred",
+              description: data?.message,
+            });
+          } else {
+            toast({
+              title: "Event Created Successfully",
+              description: data?.message,
+              action: (
+                <ToastAction altText={"transactionHash"}>
+                  <Link
+                    href={`https://sepolia.lineascan.build/tx/${transactionHash}`}
+                    target="_blank"
+                  >
+                    View
+                  </Link>
+                </ToastAction>
+              ),
+            });
+            router.push("/");
+          }
+        } else {
+          toast({ title: "Transaction could not be processed" });
+        }
+      }
+    } catch (error: any) {
+      console.log(error);
+      toast({
+        variant: "destructive",
+        description: error?.message || "Error while creating event",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     if (!activeAccount && !isConnecting) {
@@ -53,6 +170,10 @@ export default function HostEventPage() {
                 <Label htmlFor="title">Event Title</Label>
                 <Input
                   id="title"
+                  value={config?.title}
+                  onChange={(e) =>
+                    setConfig({ ...config, title: e.target.value || "" })
+                  }
                   placeholder="Enter event title"
                   className="bg-white dark:bg-zinc-800"
                 />
@@ -63,6 +184,10 @@ export default function HostEventPage() {
                 <Input
                   id="website"
                   type="url"
+                  value={config?.website}
+                  onChange={(e) =>
+                    setConfig({ ...config, website: e.target.value })
+                  }
                   placeholder="https://your-event-website.com"
                   className="bg-white dark:bg-zinc-800"
                 />
@@ -70,24 +195,6 @@ export default function HostEventPage() {
 
               <div className="space-y-2">
                 <Label htmlFor="image">Event Image</Label>
-                {/* <div className="flex items-center justify-center w-full">
-                  <label
-                    htmlFor="image"
-                    className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-zinc-800 dark:bg-zinc-900 hover:bg-gray-100"
-                  >
-                    <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                      <ImagePlus className="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400" />
-                      <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
-                        <span className="font-semibold">Click to upload</span>{" "}
-                        or drag and drop
-                      </p>
-                      <p className="text-xs text-gray-500 dark:text-gray-400">
-                        SVG, PNG, JPG or GIF (MAX. 800x400px)
-                      </p>
-                    </div>
-                    <input id="image" type="file" className="hidden" />
-                  </label>
-                </div> */}
                 {imageUrl.length == 0 ? (
                   <UploadDropzone
                     endpoint={"imageUploader"}
@@ -114,27 +221,63 @@ export default function HostEventPage() {
                 )}
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
+              <div className="grid grid-cols-3 gap-4">
+                <div className="space-y-2 flex flex-col">
                   <Label htmlFor="ticketPrice">Ticket Price</Label>
                   <Input
                     id="ticketPrice"
                     type="number"
+                    value={config?.ticketPrice}
+                    onChange={(e) =>
+                      setConfig({
+                        ...config,
+                        ticketPrice: Number(e.target.value),
+                      })
+                    }
                     min="0"
                     step="0.01"
                     placeholder="0.00"
                     className="bg-white dark:bg-zinc-800"
                   />
                 </div>
-                <div className="space-y-2">
+                <div className="space-y-2 flex flex-col">
                   <Label htmlFor="numTickets">Number of Tickets</Label>
                   <Input
                     id="numTickets"
+                    value={config?.tickets}
+                    onChange={(e) =>
+                      setConfig({ ...config, tickets: Number(e.target.value) })
+                    }
                     type="number"
                     min="1"
                     placeholder="100"
                     className="bg-white dark:bg-zinc-800"
                   />
+                </div>
+                <div className="space-y-2 flex flex-col">
+                  <Label htmlFor="eventDate">Event Date</Label>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant={"outline"}
+                        className={cn(
+                          "bg-white dark:bg-zinc-800",
+                          !date && "text-muted-foreground"
+                        )}
+                      >
+                        <CalendarIcon />
+                        {date ? format(date, "PPP") : <span>Pick a date</span>}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={date}
+                        onSelect={setDate}
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
                 </div>
               </div>
 
@@ -142,6 +285,10 @@ export default function HostEventPage() {
                 <Label htmlFor="venue">Venue</Label>
                 <Input
                   id="venue"
+                  value={config?.venue}
+                  onChange={(e) =>
+                    setConfig({ ...config, venue: e.target.value })
+                  }
                   placeholder="Enter event venue"
                   className="bg-white dark:bg-zinc-800"
                 />
@@ -166,8 +313,10 @@ export default function HostEventPage() {
                   </Button>
                 </div>
                 {previewMode ? (
-                  <Card className="mt-2 p-4 prose dark:prose-invert max-w-none bg-white dark:bg-zinc-800">
-                    <ReactMarkdown>{description}</ReactMarkdown>
+                  <Card className="mt-2 p-4 max-w-none bg-white dark:bg-zinc-800">
+                    <div className="prose dark:prose-invert max-w-none">
+                      <ReactMarkdown>{description}</ReactMarkdown>
+                    </div>
                   </Card>
                 ) : (
                   <Textarea
@@ -182,7 +331,9 @@ export default function HostEventPage() {
             </form>
           </CardContent>
           <CardFooter>
-            <Button className="w-full">Create Event</Button>
+            <Button disabled={loading} onClick={createEvent} className="w-full">
+              Create Event
+            </Button>
           </CardFooter>
         </Card>
       </div>

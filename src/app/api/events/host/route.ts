@@ -1,7 +1,7 @@
 // app/api/events/route.ts
 import { NextResponse } from "next/server";
 
-import Event from "@/models/events";
+import Event from "@/models/events.model";
 import { IEvent, ApiResponse } from "@/types/events";
 import { dbConnect } from "@/lib/connect";
 
@@ -12,6 +12,7 @@ export async function POST(request: Request) {
     const body: IEvent = await request.json();
 
     const event = new Event({
+      _id: body._id,
       title: body.title,
       website: body.website,
       eventImage: body.eventImage,
@@ -20,6 +21,9 @@ export async function POST(request: Request) {
       venue: body.venue,
       description: body.description,
       owner: body.owner,
+      transactionHash: body.transactionHash,
+      date: body.date,
+      availableTickets: body.totalTickets,
     });
 
     const savedEvent = await event.save();

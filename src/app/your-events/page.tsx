@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { MoreVertical, MapPin, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -11,6 +11,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import axios from "axios";
+import { useActiveAccount } from "thirdweb/react";
 
 // Sample data for events
 const events = [
@@ -57,6 +59,27 @@ const events = [
 
 export default function YourEventsPage() {
   const [activeTab, setActiveTab] = useState("upcoming");
+  const [events, setEvents] = useState<any>({ upcoming: [], past: [] });
+  const activeAccount = useActiveAccount();
+
+  const fetchEvents = async () => {
+    try {
+      const { data } = await axios.post("/api/events", {
+        owner: activeAccount?.address,
+      });
+      if (data.success) {
+        setEvents({ upcoming: data.events.upcoming, past: data.events.past });
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  useEffect(() => {
+    if (activeAccount) {
+      fetchEvents();
+    }
+  }, [activeAccount]);
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -65,12 +88,12 @@ export default function YourEventsPage() {
           Bookings
         </h1>
         <p className="text-gray-500 dark:text-gray-400 mb-6">
-          See your scheduled events from your calendar events links.
+          See your upcoming and past events all in one place
         </p>
 
         <Tabs defaultValue="upcoming" className="mb-8 p-2">
-          <TabsList className="grid w-full grid-cols-4 p-1 bg-gray-100 dark:bg-zinc-800 rounded-lg">
-            {["upcoming", "past", "cancelled", "your events"].map((tab) => (
+          <TabsList className="grid w-full grid-cols-2 p-1 bg-gray-100 dark:bg-zinc-800 rounded-lg">
+            {["upcoming", "past"].map((tab) => (
               <TabsTrigger
                 key={tab}
                 value={tab}
@@ -84,7 +107,7 @@ export default function YourEventsPage() {
         </Tabs>
 
         <div className="space-y-4">
-          {events.map((event) => (
+          {events[activeTab].map((event: any) => (
             <div
               key={event.id}
               className="bg-white dark:bg-zinc-800 rounded-lg p-4 shadow-sm hover:shadow-md transition-all duration-300 ease-in-out transform hover:-translate-y-1 hover:bg-gray-50 dark:hover:bg-zinc-700 group"
@@ -103,11 +126,7 @@ export default function YourEventsPage() {
 
                   {/* Event Details */}
                   <div className="space-y-2">
-                    <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
-                      <span className="bg-emerald-100 dark:bg-emerald-900 text-emerald-600 dark:text-emerald-300 px-2 py-1 rounded-full text-xs font-medium">
-                        {event.startTime} - {event.endTime}
-                      </span>
-                    </div>
+                    <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400"></div>
                     <div className="font-medium text-lg group-hover:text-emerald-500 transition-colors duration-300">
                       {event.title}
                     </div>
@@ -115,24 +134,7 @@ export default function YourEventsPage() {
                       <MapPin className="h-4 w-4 text-emerald-500" />
                       <span>{event.location}</span>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <div className="flex -space-x-2 overflow-hidden p-1">
-                        {event.participants.map((participant, index) => (
-                          <Avatar
-                            key={index}
-                            className="h-8 w-8 border-2 border-white dark:border-zinc-800 transition-transform duration-300 hover:scale-110 hover:z-10"
-                          >
-                            <AvatarImage
-                              src={participant.image}
-                              alt={participant.name}
-                            />
-                            <AvatarFallback>
-                              {participant.name[0]}
-                            </AvatarFallback>
-                          </Avatar>
-                        ))}
-                      </div>
-                    </div>
+                    <div className="flex items-center gap-2"></div>
                   </div>
                 </div>
 
