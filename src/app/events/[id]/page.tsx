@@ -10,7 +10,7 @@ import { TicketStatus } from "@/components/core";
 export default async function EventPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
   const eventData = await getSingleEvent(id);

@@ -2,7 +2,11 @@ import { dbConnect } from "@/lib/connect";
 import Event from "@/models/events.model";
 import { ApiResponse } from "@/types/events";
 
-export async function GET({ params }: { params: { id: string } }) {
+export async function GET(
+  _req: Request,
+  _res: Response,
+  { params }: { params: { id: string } }
+) {
   try {
     await dbConnect();
     const id = params.id;
